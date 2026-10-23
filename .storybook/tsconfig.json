@@ -1,0 +1,1 @@
+{"extends":"../tsconfig.json","compilerOptions":{"types":["node"]},"include":["./*.ts","../projects/demo-ui/src/**/*.ts"],"exclude":["../projects/demo/src/**/*"]}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Demo Angular Development"
+  short_description: "Angular features, reusable controls and Storybook"
+  default_prompt: "Use $demo-angular for the relevant change in the transactions demo."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Demo Accessibility"
+  short_description: "Keyboard, form errors, dialogs and accessible states"
+  default_prompt: "Use $demo-accessibility for the relevant change in the transactions demo."

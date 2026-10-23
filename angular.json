@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "newProjectRoot": "projects",
+  "cli": {
+    "analytics": false,
+    "cache": {
+      "enabled": false
+    }
+  },
+  "projects": {
+    "demo": {
+      "projectType": "application",
+      "root": "projects/demo",
+      "sourceRoot": "projects/demo/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/demo",
+            "browser": "projects/demo/src/main.ts",
+            "index": "projects/demo/src/index.html",
+            "tsConfig": "projects/demo/tsconfig.app.json",
+            "polyfills": ["zone.js"],
+            "styles": ["projects/demo/src/styles.css"],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "all",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "700kB",
+                  "maximumError": "1MB"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "development": {
+              "buildTarget": "demo:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "demo:build:development",
+            "port": 6006,
+            "compodoc": false
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "demo:build:development",
+            "outputDir": "storybook-static",
+            "compodoc": false
+          }
+        }
+      }
+    },
+    "demo-ui": {
+      "projectType": "library",
+      "root": "projects/demo-ui",
+      "sourceRoot": "projects/demo-ui/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/demo-ui/ng-package.json",
+            "tsConfig": "projects/demo-ui/tsconfig.lib.json"
+          }
+        }
+      }
+    }
+  }
+}

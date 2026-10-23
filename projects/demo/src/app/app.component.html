@@ -1,0 +1,314 @@
+<a class="skip-link" href="#main">Skip to transactions</a>
+<main id="main" class="app-shell">
+  <p class="eyebrow">Flowbite / Angular</p>
+  <h1 class="page-heading">Transactions</h1>
+  <p class="intro">Keep track of payments, refunds, and transfers.</p>
+  <p class="sr-only" role="status" aria-live="polite">
+    {{
+      vm.state().loading
+        ? "Loading transactions."
+        : vm.range() + " transactions."
+    }}
+  </p>
+  <p class="toast" role="status" aria-live="polite">{{ message() }}</p>
+  @if (vm.state().readOnly) {
+    <p class="readonly-note">
+      Read-only preview. You can browse transactions; changes are disabled.
+    </p>
+  }
+  <section
+    class="transaction-panel"
+    aria-label="Transaction management"
+    data-testid="transaction-panel"
+    [attr.aria-busy]="vm.state().loading"
+  >
+    <div class="toolbar">
+      <div class="search-wrap">
+        <ui-icon name="search" /><label class="sr-only" for="search"
+          >Search transactions</label
+        ><input
+          uiControl
+          id="search"
+          type="search"
+          placeholder="Search for transaction"
+          data-testid="search"
+          [value]="vm.state().query"
+          (input)="vm.search($any($event.target).value)"
+        />
+      </div>
+      <div class="toolbar-actions">
+        <button
+          uiButton
+          variant="primary"
+          type="button"
+          data-testid="add-transaction"
+          id="add-transaction"
+          [disabled]="vm.state().readOnly || vm.state().loading"
+          (click)="open('add')"
+        >
+          <ui-icon name="plus" />Add transaction</button
+        ><label class="sr-only" for="status-filter">Filter by status</label>
+        <div class="filter-wrap">
+          <ui-icon name="filter" /><select
+            uiControl
+            id="status-filter"
+            class="status-filter"
+            [value]="vm.state().status"
+            (change)="vm.filter($any($event.target).value)"
+          >
+            <option value="All">Filters</option>
+            <option>Completed</option>
+            <option>In progress</option>
+            <option>Failed</option></select
+          ><ui-icon name="angledown" />
+        </div>
+        <button
+          uiButton
+          type="button"
+          [disabled]="!vm.state().selected.length || vm.state().readOnly"
+          (click)="requestDelete(vm.state().selected)"
+        >
+          Delete selected
+          @if (vm.state().selected.length) {
+            ({{ vm.state().selected.length }})
+          }
+        </button>
+      </div>
+    </div>
+    @if (vm.state().loading) {
+      <ui-table-state
+        kind="loading"
+        heading="Loading transactions…"
+        description="Your payments will appear here shortly."
+      />
+    } @else if (vm.state().error) {
+      <ui-table-state
+        kind="error"
+        heading="Unable to load transactions"
+        [description]="vm.state().error"
+        actionLabel="Try again"
+        (action)="vm.load()"
+      />
+    } @else if (!vm.total()) {
+      <ui-table-state
+        kind="empty"
+        heading="No transactions found"
+        description="Try another search or add your first transaction."
+        actionLabel="Clear filters"
+        (action)="clearFilters()"
+      />
+    } @else {
+      <ui-transaction-table
+        [rows]="vm.rows()"
+        [selected]="vm.state().selected"
+        [sortKey]="vm.state().sortKey"
+        [sortDirection]="vm.state().direction"
+        [readOnly]="vm.state().readOnly"
+        (sort)="vm.sort($event)"
+        (selection)="vm.select($event)"
+        (view)="open('view', $event)"
+        (edit)="open('edit', $event)"
+        (remove)="removeRow($event)"
+      />
+    }
+    <footer class="table-footer">
+      <span
+        >Showing <strong>{{ vm.range() }}</strong></span
+      >
+      <nav class="pagination" aria-label="Transaction pages">
+        <button
+          type="button"
+          aria-label="Previous page"
+          [disabled]="vm.state().page === 1 || vm.state().loading"
+          (click)="vm.page(vm.state().page - 1)"
+        >
+          <ui-icon name="angleleft" />
+        </button>
+        @for (page of vm.pages(); track page) {
+          <button
+            type="button"
+            [attr.aria-label]="'Page ' + page"
+            [attr.aria-current]="vm.state().page === page ? 'page' : null"
+            (click)="vm.page(page)"
+          >
+            {{ page }}
+          </button>
+        }
+        <button
+          type="button"
+          aria-label="Next page"
+          [disabled]="vm.state().page === vm.pageCount() || vm.state().loading"
+          (click)="vm.page(vm.state().page + 1)"
+        >
+          <ui-icon name="angleright" />
+        </button>
+      </nav>
+    </footer>
+  </section>
+  <details class="demo-controls">
+    <summary>Demo scenarios</summary>
+    <div class="demo-control-row">
+      <button uiButton size="small" type="button" (click)="vm.load('empty')">
+        Show empty state</button
+      ><button uiButton size="small" type="button" (click)="vm.load('error')">
+        Simulate load error</button
+      ><button
+        uiButton
+        size="small"
+        type="button"
+        (click)="
+          vm.failNextSave();
+          message.set('The next save will simulate an error.')
+        "
+      >
+        Fail next save</button
+      ><button
+        uiButton
+        size="small"
+        type="button"
+        (click)="vm.reset(); message.set('')"
+      >
+        Reset sample data</button
+      ><label
+        ><input
+          type="checkbox"
+          [checked]="vm.state().readOnly"
+          (change)="vm.readOnly($any($event.target).checked)"
+        />
+        Read-only mode</label
+      >
+    </div>
+    <p>Local sample data. Changes reset when you refresh.</p>
+  </details>
+  <p class="attribution">
+    Design adapted from
+    <a
+      href="https://www.figma.com/design/xC54P46xiMILmuEGd0bnwW/Flowbite-Design-System--Community-?node-id=1149-87712"
+      target="_blank"
+      rel="noreferrer"
+      >Flowbite Design System</a
+    >
+    by Themesberg · CC BY 4.0
+  </p>
+</main>
+<ui-dialog
+  #editor
+  [heading]="
+    mode() === 'add'
+      ? 'Add transaction'
+      : mode() === 'edit'
+        ? 'Edit transaction'
+        : 'Transaction details'
+  "
+  dialogId="transaction-editor"
+  ><form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    @if (vm.state().saveError) {
+      <p class="alert" role="alert">{{ vm.state().saveError }}</p>
+    }
+    <div class="form-grid">
+      <ui-field
+        controlId="description"
+        label="Description"
+        [required]="true"
+        [error]="error('description')"
+        ><input
+          uiControl
+          id="description"
+          formControlName="description"
+          [readOnly]="mode() === 'view'"
+          required
+          maxlength="100"
+          [attr.aria-invalid]="error('description') ? 'true' : null"
+          [attr.aria-describedby]="
+            error('description') ? 'description-error' : null
+          "
+          placeholder="e.g. Payment from Alex Morgan"
+      /></ui-field>
+      <ui-field
+        controlId="date"
+        label="Due date"
+        [required]="true"
+        [error]="error('date')"
+        ><input
+          uiControl
+          id="date"
+          formControlName="date"
+          type="date"
+          [readOnly]="mode() === 'view'"
+          required
+          [attr.aria-invalid]="error('date') ? 'true' : null"
+          [attr.aria-describedby]="error('date') ? 'date-error' : null"
+      /></ui-field>
+      <ui-field
+        controlId="amount"
+        label="Amount (USD)"
+        [required]="true"
+        hint="Use a negative amount for refunds or outgoing payments."
+        [error]="error('amount')"
+        ><input
+          uiControl
+          id="amount"
+          formControlName="amount"
+          type="number"
+          step="0.01"
+          min="-1000000"
+          max="1000000"
+          [readOnly]="mode() === 'view'"
+          required
+          [attr.aria-invalid]="error('amount') ? 'true' : null"
+          [attr.aria-describedby]="
+            error('amount') ? 'amount-error' : 'amount-hint'
+          "
+      /></ui-field>
+      <ui-field controlId="status" label="Status" [required]="true"
+        ><select uiControl id="status" formControlName="status" required>
+          <option>Completed</option>
+          <option>In progress</option>
+          <option>Failed</option>
+        </select></ui-field
+      >
+    </div>
+    <div class="dialog-footer">
+      <button uiButton type="button" (click)="editor.close()">
+        {{ mode() === "view" ? "Close" : "Cancel" }}
+      </button>
+      @if (mode() !== "view") {
+        <button
+          uiButton
+          variant="primary"
+          type="submit"
+          data-testid="save-transaction"
+          [loading]="vm.state().saving"
+        >
+          {{ vm.state().saving ? "Saving…" : "Save transaction" }}
+        </button>
+      }
+    </div>
+  </form></ui-dialog
+>
+<ui-dialog
+  #confirmation
+  heading="Delete transactions?"
+  dialogId="delete-confirmation"
+  fallbackFocusId="add-transaction"
+  ><p>
+    This will delete {{ deleteIds().length }}
+    {{ deleteIds().length === 1 ? "transaction" : "transactions" }} from the
+    local demo.
+  </p>
+  @if (vm.state().saveError) {
+    <p class="alert" role="alert">{{ vm.state().saveError }}</p>
+  }
+  <div class="dialog-footer">
+    <button uiButton type="button" (click)="confirmation.close()">Cancel</button
+    ><button
+      uiButton
+      variant="danger"
+      type="button"
+      [loading]="vm.state().saving"
+      (click)="confirmDelete()"
+    >
+      {{ vm.state().saving ? "Deleting…" : "Confirm delete" }}
+    </button>
+  </div></ui-dialog
+>

@@ -1,0 +1,30 @@
+node_modules/
+.angular/
+dist/
+storybook-static/
+test-results/
+reports/
+story-test-results/
+
+# Local presentation and preparation material
+docs/demo-preparation.md
+docs/walkthrough.md
+docs/ai-workflow.md
+docs/verification.md
+scripts/capture-review.mjs
+recordings/
+demo-recording/
+*.mp4
+*.webm
+*.wav
+*.srt
+*.ass
+
+# Local environment and editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.vscode/
+.idea/

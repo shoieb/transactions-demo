@@ -1,0 +1,34 @@
+/* Values read from the Flowbite Community table via Figma MCP. See docs/design-mapping.md. */
+:root {
+  --ui-canvas: #fff;
+  --ui-surface: #f9fafb;
+  --ui-text: #101828;
+  --ui-body: #4a5565;
+  --ui-muted: #6a7282;
+  --ui-border: #e5e7eb;
+  --ui-brand: #1447e6;
+  --ui-brand-hover: #123bbf;
+  --ui-danger: #c70036;
+  --ui-danger-hover: #a3002d;
+  --ui-success-bg: #ecfdf5;
+  --ui-success-text: #006045;
+  --ui-success-border: #a4f4cf;
+  --ui-warning-bg: #fff8f1;
+  --ui-warning-text: #771d1d;
+  --ui-warning-border: #fcd9bd;
+  --ui-danger-bg: #fef0f2;
+  --ui-danger-text: #8b0836;
+  --ui-danger-border: #ffccd3;
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 20px;
+  --ui-space-6: 24px;
+  --ui-space-8: 32px;
+  --ui-radius-sm: 6px;
+  --ui-radius-base: 12px;
+  --ui-font: Inter, system-ui, sans-serif;
+  --ui-shadow: 0 1px 0.5px 0.05px #1d293d05;
+  --ui-focus: 0 0 0 3px #1447e640;
+}

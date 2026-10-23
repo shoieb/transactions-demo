@@ -1,0 +1,4 @@
+interface:
+  display_name: "Demo Browser QA"
+  short_description: "Playwright journeys, visual diffs and test evidence"
+  default_prompt: "Use $demo-browser-qa for the relevant change in the transactions demo."

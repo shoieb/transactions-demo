@@ -1,0 +1,4 @@
+interface:
+  display_name: "Demo Design System"
+  short_description: "Figma tokens, component reuse and visual UI review"
+  default_prompt: "Use $demo-design-system for the relevant change in the transactions demo."

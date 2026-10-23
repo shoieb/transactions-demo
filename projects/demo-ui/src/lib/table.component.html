@@ -1,0 +1,111 @@
+<div
+  class="table-scroll"
+  tabindex="0"
+  role="region"
+  aria-label="Transactions table, scroll horizontally on narrow screens"
+>
+  <table>
+    <caption class="sr-only">
+      Transactions with due dates, amounts and payment status
+    </caption>
+    <thead>
+      <tr>
+        <th class="checkbox-cell">
+          <input
+            type="checkbox"
+            aria-label="Select all visible transactions"
+            [checked]="allSelected()"
+            [disabled]="readOnly()"
+            (change)="toggleAll()"
+          />
+        </th>
+        <th scope="col">Transaction</th>
+        <th scope="col" [attr.aria-sort]="ariaSort('date')">
+          <button type="button" class="sort-button" (click)="sort.emit('date')">
+            Due Date <ui-icon name="chevronsort" />
+          </button>
+        </th>
+        <th scope="col" [attr.aria-sort]="ariaSort('amount')">
+          <button
+            type="button"
+            class="sort-button"
+            (click)="sort.emit('amount')"
+          >
+            Amount <ui-icon name="chevronsort" />
+          </button>
+        </th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions <ui-icon name="questioncircle" /></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row.id) {
+        <tr [attr.data-testid]="'transaction-' + row.id">
+          <td class="checkbox-cell">
+            <input
+              type="checkbox"
+              [attr.aria-label]="'Select ' + row.description"
+              [checked]="selected().includes(row.id)"
+              [disabled]="readOnly()"
+              (change)="toggle(row.id)"
+            />
+          </td>
+          <td class="description">{{ row.description }}</td>
+          <td class="date-cell">
+            <ui-icon name="calendarmonth" />{{
+              row.date + "T00:00:00Z" | date: "dd MMM yyyy" : "UTC"
+            }}
+          </td>
+          <td class="amount">
+            {{ row.amount | currency: "USD" : "symbol" : "1.0-2" }}
+          </td>
+          <td><ui-badge [status]="row.status" /></td>
+          <td>
+            <div class="row-actions">
+              <div class="action-disclosure" (keydown.escape)="menu.set(null)">
+                <button
+                  uiButton
+                  size="small"
+                  type="button"
+                  [attr.aria-expanded]="menu() === row.id"
+                  [attr.aria-controls]="'actions-' + row.id"
+                  [attr.aria-label]="'Actions for ' + row.description"
+                  (click)="menu.set(menu() === row.id ? null : row.id)"
+                >
+                  Actions <ui-icon name="angledown1" />
+                </button>
+                @if (menu() === row.id) {
+                  <div class="action-popover" [id]="'actions-' + row.id">
+                    <button
+                      type="button"
+                      (click)="view.emit(row); menu.set(null)"
+                    >
+                      View details</button
+                    ><button
+                      type="button"
+                      [disabled]="readOnly()"
+                      (click)="edit.emit(row); menu.set(null)"
+                    >
+                      Edit transaction
+                    </button>
+                  </div>
+                }
+              </div>
+              <button
+                uiButton
+                variant="danger"
+                size="small"
+                type="button"
+                [disabled]="readOnly()"
+                [attr.aria-label]="'Delete ' + row.description"
+                (click)="remove.emit(row)"
+              >
+                <ui-icon name="trashbin" />Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
